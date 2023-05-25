@@ -13,3 +13,4 @@
 /videos/delete -> Delete Video
 /videos/comment -> Comment on a video
 /videos/comment/delete -> Delete A Comment of a video
+/delete-video-comment
