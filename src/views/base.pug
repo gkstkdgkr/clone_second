@@ -4,10 +4,23 @@ html(lang="ko")
     meta(http-equiv="X-UA-Compatible", content="IE=edge")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
 
-  title #{pageTitle} | Wetube      
+  //- 다른 text도 섞어서 쓸 경우
+  title #{pageTitle} | Wetube
   link(rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css")
-  button send
 
   body 
+    header
+      if fakeUser.loggedIn 
+        small Hello #{fakeUser.username}
+      nav 
+        ul 
+          if fakeUser.loggedIn
+            li 
+              a(href="logout") Logout
+          else
+            li 
+              a(href="/login") Login
+      //- 변수만 사용시
+      h1=pageTitle
     block content
   include partials/footer.pug
