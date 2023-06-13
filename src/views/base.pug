@@ -9,5 +9,11 @@ html(lang="ko")
     header
       //- 변수만 사용시
       h1=pageTitle
-    block content
+      nav 
+        ul 
+          li
+            a(href="/videos/upload") Upload Video
+
+    main 
+      block content
   include partials/footer.pug
