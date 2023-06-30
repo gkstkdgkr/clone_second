@@ -1,17 +1,27 @@
 import Video from "../models/Video";
-
-export const home = (req,res) => {
-  Video.find({})
-    .then((videos)=>{
-      console.log('videos',videos);
-    })
-    .catch((error)=>{
-      console.log('error',error);
-    })
-  res.render('home', {pageTitle : `home`,videos:[]})
-  console.log('hello');
+  // Video.find({})
+  //   .then((videos)=>{
+  //     console.log('videos',videos);
+  //   })
+  //   .catch((error)=>{
+  //     console.log('error',error);
+  //   })
+  // res.render('home', {pageTitle : `home`,videos:[]})
+  // console.log('hello');
+// hello가 먼저 출력된 후 render과정을 거치고 video가 마지막에 출력됨(database검색이 끝나야 render가 실행됨) (Callback)
+// await를 쓰지않으면 코드 순서대로 출력이 되지 않음
+export const home = async (req,res) => {
+  try{
+    const videos = await Video.find({});
+    return res.render('home', {pageTitle : `home`,videos:[]})  
+  }
+  catch(error){
+    return res.render("error",error)
+  }
 }; //pageTitle 템플릿 변수 전달
-
+// await를 씀으로써 db에게 데이터 받는 시간을 기다려줌
+// async랑 세트로 씀(함수안에서만 사용)(promiss)
+// try catch는 try를 실행하고 오류시 catch실행
 export const watch = (req, res) => {
   const {id} = req.params;
   return res.render("Watch",{ pageTitle :`Watching`});
