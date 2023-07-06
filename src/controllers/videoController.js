@@ -12,8 +12,8 @@ import Video from "../models/Video";
 // await를 쓰지않으면 코드 순서대로 출력이 되지 않음
 export const home = async (req,res) => {
   try{
-    const videos = await Video.find({});
-    return res.render('home', {pageTitle : `home`,videos:[]})  
+    const videos = await Video.find({}); // db에서 불러옴
+    return res.render('home', {pageTitle : `home`,videos})  
   }
   catch(error){
     return res.render("error",error)
@@ -30,7 +30,7 @@ export const getEdit = (req, res) => {
   const {id} = req.params;
   return res.render("edit",{pageTitle:`Editing`})
 };
-
+// 같은 render는 한번만 가능
 export const postEdit = (req, res) => {
   // const id = req.params.id
   const {id} = req.params;
@@ -43,7 +43,32 @@ export const getUpload = (req, res) => {
 };
 
 // req.body를 통해 input에 있는 내용을 받아올 수 있음
-export const postUpload = (req, res) => {
-  const {title} = req.body;
+export const postUpload = async (req, res) => {
+  const { title, description, hashtags } = req.body;
+  const video = new Video({
+    // title : title,
+    // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
+    title,
+    description,
+    createAt:Date.now(),
+    hashtags : hashtags.split(",").map(word => `#${word}`),
+    meta: {
+      views : 0,
+      rating : 0,
+    },    
+  });
+  await video.save(); // data가 db에 저장되는 시간을 기다림
+  // await Video.create({
+  //   // title : title,
+  //   // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
+  //   title,
+  //   description,
+  //   createAt:Date.now(),
+  //   hashtags : hashtags.split(",").map(word => `#${word}`),
+  //   meta: {
+  //     views : 0,
+  //     rating : 0,
+  //   },    
+  // });
   return res.redirect("/");
 };
