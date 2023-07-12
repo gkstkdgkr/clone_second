@@ -17,7 +17,9 @@ const videoRouter = express.Router();
 
 // :id(//d+) id를 불러오는데 숫자만 받아옴 
 // :id는 express에게 id라는 변수를 받아오라는 표시
-videoRouter.get("/:id(\\d+)",watch);
-videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit);
-videoRouter.route("/upload").get(getUpload).post(postUpload)
+
+// 지금 현재 받아오는 id는 24비트 16진수([0-9a-f]{24})
+videoRouter.get("/:id([0-9a-f]{24})",watch);
+videoRouter.route("/:id([0-9a-f]{24})/edit").get(getEdit).post(postEdit);
+videoRouter.route("/upload").get(getUpload).post(postUpload);
 export default videoRouter;

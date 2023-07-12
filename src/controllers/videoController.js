@@ -22,19 +22,41 @@ export const home = async (req,res) => {
 // await를 씀으로써 db에게 데이터 받는 시간을 기다려줌
 // async랑 세트로 씀(함수안에서만 사용)(promiss)
 // try catch는 try를 실행하고 오류시 catch실행
-export const watch = (req, res) => {
-  const {id} = req.params;
-  return res.render("Watch",{ pageTitle :`Watching`});
-};
-export const getEdit = (req, res) => {
-  const {id} = req.params;
-  return res.render("edit",{pageTitle:`Editing`})
-};
-// 같은 render는 한번만 가능
-export const postEdit = (req, res) => {
+export const watch = async (req, res) => {
   // const id = req.params.id
   const {id} = req.params;
-  const {title} =req.body;
+  const video = await Video.findById(id)
+  if(!video){
+    return res.render("404", {pageTitle:"Video not found."})
+  }
+  return res.render("Watch",{ pageTitle : video.title , video});
+};
+
+export const getEdit = async (req, res) => {
+  const {id} = req.params;
+  const video = await Video.findById(id)
+  if(!video){
+    return res.render("404", {pageTitle:"Video not found."})
+  }
+  return res.render("edit",{pageTitle:`Edit: ${video.title}`, video})
+};
+
+// 같은 render는 한번만 가능
+export const postEdit = async (req, res) => {
+  const {id} = req.params;
+  const {title,description,hashtags} =req.body;
+  const video = await Video.exists({_id:id})
+  if(!video){
+    return res.render("404", {pageTitle:"Video not found."})
+  }
+  await Video.findByIdAndUpdate(id, {
+    title,
+    description,
+    hashtags:hashtags
+    .split(",")
+    .map((word)=> (word.startsWith('#') ? word : `#${word}`))
+  })
+
   return res.redirect(`/videos/${id}`); 
 };
 
@@ -64,7 +86,7 @@ export const postUpload = async (req, res) => {
       // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
       title,
       description,
-      hashtags : hashtags.split(",").map(word => `#${word}`),    
+      hashtags,
     });  
     return res.redirect("/");
   }
