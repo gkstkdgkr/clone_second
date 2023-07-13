@@ -52,9 +52,7 @@ export const postEdit = async (req, res) => {
   await Video.findByIdAndUpdate(id, {
     title,
     description,
-    hashtags:hashtags
-    .split(",")
-    .map((word)=> (word.startsWith('#') ? word : `#${word}`))
+    hashtags: Video.formatHashtags(hashtags),
   })
 
   return res.redirect(`/videos/${id}`); 
@@ -65,8 +63,6 @@ export const getUpload = (req, res) => {
 };
 
 // req.body를 통해 input에 있는 내용을 받아올 수 있음
-export const postUpload = async (req, res) => {
-  const { title, description, hashtags } = req.body;
   // const video = new Video({
   //   // title : title,
   //   // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
@@ -80,13 +76,15 @@ export const postUpload = async (req, res) => {
   //   },    
   // });
   // await video.save(); // data가 db에 저장되는 시간을 기다림
+        // title : title,
+      // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
+export const postUpload = async (req, res) => {
+  const { title, description, hashtags } = req.body;
   try{
     await Video.create({
-      // title : title,
-      // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
       title,
       description,
-      hashtags,
+      hashtags:Video.formatHashtags(hashtags),
     });  
     return res.redirect("/");
   }
