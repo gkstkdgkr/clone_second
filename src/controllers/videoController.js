@@ -12,7 +12,7 @@ import Video from "../models/Video";
 // await를 쓰지않으면 코드 순서대로 출력이 되지 않음
 export const home = async (req,res) => {
   try{
-    const videos = await Video.find({}); // db에서 불러옴
+    const videos = await Video.find({}).sort({createdAt:"desc"}); // db에서 불러옴
     return res.render('home', {pageTitle : `home`,videos})  
   }
   catch(error){
@@ -94,3 +94,24 @@ export const postUpload = async (req, res) => {
       errorMessage: error._message,});
   }
 };
+
+
+export const deleteVideo = async(req,res) => {
+  const {id} = req.params;
+  await Video.findByIdAndDelete(id);
+  return res.redirect("/")
+}
+
+export const search = async(req,res)=>{
+  const {keyword} = req.query
+  let videos = []
+  if(keyword){
+    videos = await Video.find({
+      title: {
+        $regex: new RegExp(`${keyword}`,"i") // 입력된 keyword 검색 "i"는 대소문자 무시 ${keyword} 
+                                             //앞에 ^ 쓰면 keyword로 시작하는 제목 // 뒤에 $ 쓰면 keyword로 끝나는 제목
+      },
+    })
+  }
+  return res.render("search",{pageTitle:"Search",videos})
+}
