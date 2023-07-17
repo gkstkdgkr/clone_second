@@ -95,7 +95,6 @@ export const postUpload = async (req, res) => {
   }
 };
 
-
 export const deleteVideo = async(req,res) => {
   const {id} = req.params;
   await Video.findByIdAndDelete(id);
@@ -108,8 +107,9 @@ export const search = async(req,res)=>{
   if(keyword){
     videos = await Video.find({
       title: {
-        $regex: new RegExp(`${keyword}`,"i") // 입력된 keyword 검색 "i"는 대소문자 무시 ${keyword} 
-                                             //앞에 ^ 쓰면 keyword로 시작하는 제목 // 뒤에 $ 쓰면 keyword로 끝나는 제목
+        $regex: new RegExp(`${keyword}`,"i") 
+        // 입력된 keyword 검색 "i"는 대소문자 무시 ${keyword} 
+        //앞에 ^ 쓰면 keyword로 시작하는 제목 // 뒤에 $ 쓰면 keyword로 끝나는 제목
       },
     })
   }
