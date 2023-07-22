@@ -35,7 +35,9 @@ export const postJoin = async (req, res) => {
   }
   res.redirect("/login");
 };
-export const getLogin = async (req, res) => {
+export const getLogin = (req, res) =>
+  res.render("login", { pageTitle: "Login" });
+export const postLogin = async (req, res) => {
   const { username, password } = req.body;
   const user = await User.findOne({ username });
   if (!user) {
@@ -53,8 +55,6 @@ export const getLogin = async (req, res) => {
   }
   return res.redirect("/");
 };
-export const postLogin = (req, res) =>
-  res.render("login", { pageTitle: "Login" });
 export const edit = (req, res) => res.send("Edit User");
 export const remove = (req, res) => res.send("Remove User");
 export const logout = (req, res) => res.send("logout");
