@@ -1,0 +1,31 @@
+
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8"/>
+  </head>
+  <title> | Wetube</title>
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css@1.12/mvp.css"/>
+  <body> 
+    <header>
+      <h1></h1>
+      <nav> 
+        <ul> 
+          <li><a href="/">Home</a></li>
+          <li><a href="/join">Join</a></li>
+          <li><a href="/login">login</a></li>
+          <li><a href="/search">Search</a></li>
+          <li> <a href="/videos/upload">Upload Video</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main> 
+      <form method="POST">
+        <input name="title" placeholder="Title" required="required" type="text" maxlength:="maxlength:" 80="80"/>
+        <input name="description" placeholder="Description (Enter at least 20 texts)" required="required" type="text" minlength:="minlength:" 20="20"/>
+        <input name="hashtags" placeholder="Hashtags, separated by comma." required="required" type="text"/>
+        <input type="submit" value="Upload Video"/>
+      </form>
+    </main>
+  </body>
+  <footer>&copy; 2023 Wetube  </footer>
+</html>
