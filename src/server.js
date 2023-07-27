@@ -21,10 +21,13 @@ app.use(express.urlencoded({
 
 app.use(
     session({
-        secret: "Hello",
-        resave: true,
-        saveUninitialized: true,
-        store: MongoStore.create({mongoUrl:"mongodb://127.0.0.1:27017/wetube"})
+        secret: process.env.COOKIE_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie:{
+            maxAge: 1800000,
+        },
+        store: MongoStore.create({mongoUrl: process.env.DB_URL}),
     })
 )
 
