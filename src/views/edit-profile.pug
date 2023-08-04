@@ -7,3 +7,6 @@ block content
   input(placeholder="Enter Username" name="username" type="text", required, value=loggedInUser.Username)
   input(placeholder="Enter Location" name="location" type="text", required, value=loggedInUser.location)
   input(type="submit" value="Update")
+  if !loggedInUser.socialOnly
+    hr
+    a(href="change-password") Change Password &rarr; 
