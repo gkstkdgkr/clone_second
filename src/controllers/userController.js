@@ -2,9 +2,18 @@ import User from "../models/User";
 import fetch from "node-fetch";
 import bcrypt from "bcrypt";
 
-export const getJoin = (req, res) => res.render("join", { pageTitle: "Join" });
+export const getJoin = (req, res) => res.render("join", {
+  pageTitle: "Join"
+});
 export const postJoin = async (req, res) => {
-  const { name, username, email, password, password2, location } = req.body;
+  const {
+    name,
+    username,
+    email,
+    password,
+    password2,
+    location
+  } = req.body;
   const pageTitle = "Join";
   if (password !== password2) {
     return res.status(400).render("join", {
@@ -12,7 +21,9 @@ export const postJoin = async (req, res) => {
       errorMessage: "Password confirmation does not match.",
     });
   }
-  const exists = await User.exists({ $or: [{ username }, { email }] });
+  const exists = await User.exists({
+    $or: [{username}, {email}]
+  });
   if (exists) {
     return res.status(400).render("join", {
       pageTitle,
@@ -36,11 +47,19 @@ export const postJoin = async (req, res) => {
   }
 };
 export const getLogin = (req, res) =>
-  res.render("login", { pageTitle: "Login" });
+  res.render("login", {
+    pageTitle: "Login"
+  });
 export const postLogin = async (req, res) => {
-  const { username, password } = req.body;
+  const {
+    username,
+    password
+  } = req.body;
   const pageTitle = "Login";
-  const user = await User.findOne({ username, socialOnly: false });
+  const user = await User.findOne({
+    username,
+    socialOnly: false
+  });
   if (!user) {
     return res.status(400).render("login", {
       pageTitle,
@@ -87,7 +106,9 @@ export const finishGithubLogin = async (req, res) => {
     })
   ).json();
   if ("access_token" in tokenRequest) {
-    const { access_token } = tokenRequest;
+    const {
+      access_token
+    } = tokenRequest;
     const apiUrl = "https://api.github.com";
     const userData = await (
       await fetch(`${apiUrl}/user`, {
@@ -110,7 +131,9 @@ export const finishGithubLogin = async (req, res) => {
     if (!emailObj) {
       return res.redirect("/login");
     }
-    let user = await User.findOne({ email: emailObj.email });
+    let user = await User.findOne({
+      email: emailObj.email
+    });
     if (!user) {
       user = await User.create({
         // create an account (social only)
@@ -136,11 +159,25 @@ export const logout = (req, res) => {
 };
 
 export const getEdit = (req, res) => {
-  return res.render("edit-profile", { pageTitle: "Edit Profile" });
+  return res.render("edit-profile", {
+    pageTitle: "Edit Profile"
+  });
 };
 
-export const postEdit = (req, res) => {
-  return res.render("edit-profile");
+export const postEdit = async (req, res) => {
+  const {
+    session: {
+      user: { _id },
+    }
+  } = req;
+
+  const { name, email, username, location } = req.body;
+  const updateUser =  await User.findByIdAndUpdate(_id, {
+    name, email, username, location
+  },
+  {new : true})
+  req.session.user = updateUser
+  return res.redirect("/user/edit");
 };
 
 export const see = (req, res) => res.send("See User");

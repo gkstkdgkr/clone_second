@@ -18,7 +18,9 @@ html(lang="ko")
               a(href="/users/edit") Edit Profile
             li 
               a(href="/users/logout") Log Out
-
+            li 
+              a(href="/videos/upload") Upload Video
+              
           //- not login
           else
             li
@@ -27,8 +29,7 @@ html(lang="ko")
               a(href="/login") login
           li
             a(href="/search") Search
-          li 
-            a(href="/videos/upload") Upload Video
+
 
     main 
       block content
