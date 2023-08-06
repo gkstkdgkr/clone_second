@@ -79,11 +79,13 @@ export const getUpload = (req, res) => {
         // title : title,
       // 왼쪽 title은 schema의 title // 오른쪽 title은 body의 req.body의 title
 export const postUpload = async (req, res) => {
+  const {path:fileUrl} = req.file
   const { title, description, hashtags } = req.body;
   try{
     await Video.create({
       title,
       description,
+      fileUrl,
       hashtags:Video.formatHashtags(hashtags),
     });  
     return res.redirect("/");
