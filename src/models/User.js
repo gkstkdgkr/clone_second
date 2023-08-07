@@ -32,7 +32,9 @@ const userSchema = new mongoose.Schema({
 });
 //비밀번호 암호화
 userSchema.pre("save", async function () {
-  this.password = await bcrypt.hash(this.password, 5);
+  if(this.isModified("password")){
+    this.password = await bcrypt.hash(this.password, 5);
+  }
 });
 const User = mongoose.model("User", userSchema);
 export default User;
