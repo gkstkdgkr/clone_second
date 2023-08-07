@@ -28,6 +28,7 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   location: String,
+  videos: [{ type: mongoose.Schema.Types.ObjectId, ref: "Video" }]
 });
 //비밀번호 암호화
 userSchema.pre("save", async function () {
