@@ -23,6 +23,10 @@ var videoSchema = new _mongoose["default"].Schema({
     trim: true,
     maxLength: 80
   },
+  fileUrl: {
+    type: String,
+    require: true
+  },
   description: {
     type: String,
     required: true,
@@ -49,9 +53,14 @@ var videoSchema = new _mongoose["default"].Schema({
       "default": 0,
       required: true
     }
+  },
+  owner: {
+    type: _mongoose["default"].Schema.Types.ObjectId,
+    require: true,
+    ref: "User"
   }
 });
-videoSchema["static"]('formatHashtags', function (hashtags) {
+videoSchema["static"]("formatHashtags", function (hashtags) {
   return hashtags.split(",").map(function (word) {
     return word.startsWith("#") ? word : "#".concat(word);
   });

@@ -7,6 +7,8 @@ exports.search = exports.deleteVideo = exports.postUpload = exports.getUpload = 
 
 var _Video = _interopRequireDefault(require("../models/Video"));
 
+var _User = _interopRequireDefault(require("../models/User"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 // Video.find({})
@@ -26,30 +28,24 @@ var home = function home(req, res) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.prev = 0;
-          _context.next = 3;
+          _context.next = 2;
           return regeneratorRuntime.awrap(_Video["default"].find({}).sort({
             createdAt: "desc"
           }));
 
-        case 3:
+        case 2:
           videos = _context.sent;
-          return _context.abrupt("return", res.render('home', {
+          return _context.abrupt("return", res.render("home", {
             pageTitle: "home",
             videos: videos
           }));
 
-        case 7:
-          _context.prev = 7;
-          _context.t0 = _context["catch"](0);
-          return _context.abrupt("return", res.render("error", _context.t0));
-
-        case 10:
+        case 4:
         case "end":
           return _context.stop();
       }
     }
-  }, null, null, [[0, 7]]);
+  });
 }; //pageTitle 템플릿 변수 전달
 // await를 씀으로써 db에게 데이터 받는 시간을 기다려줌
 // async랑 세트로 씀(함수안에서만 사용)(promiss)
@@ -67,7 +63,7 @@ var watch = function watch(req, res) {
           // const id = req.params.id
           id = req.params.id;
           _context2.next = 3;
-          return regeneratorRuntime.awrap(_Video["default"].findById(id));
+          return regeneratorRuntime.awrap(_Video["default"].findById(id).populate("owner"));
 
         case 3:
           video = _context2.sent;
@@ -98,20 +94,22 @@ var watch = function watch(req, res) {
 exports.watch = watch;
 
 var getEdit = function getEdit(req, res) {
-  var id, video;
+  var id, _id, video;
+
   return regeneratorRuntime.async(function getEdit$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
           id = req.params.id;
-          _context3.next = 3;
+          _id = req.session.user._id;
+          _context3.next = 4;
           return regeneratorRuntime.awrap(_Video["default"].findById(id));
 
-        case 3:
+        case 4:
           video = _context3.sent;
 
           if (video) {
-            _context3.next = 6;
+            _context3.next = 7;
             break;
           }
 
@@ -119,13 +117,21 @@ var getEdit = function getEdit(req, res) {
             pageTitle: "Video not found."
           }));
 
-        case 6:
+        case 7:
+          if (!(String(video.owner) !== String(_id))) {
+            _context3.next = 9;
+            break;
+          }
+
+          return _context3.abrupt("return", res.status(403).redirect("/"));
+
+        case 9:
           return _context3.abrupt("return", res.render("edit", {
             pageTitle: "Edit: ".concat(video.title),
             video: video
           }));
 
-        case 7:
+        case 10:
         case "end":
           return _context3.stop();
       }
@@ -137,24 +143,25 @@ var getEdit = function getEdit(req, res) {
 exports.getEdit = getEdit;
 
 var postEdit = function postEdit(req, res) {
-  var id, _req$body, title, description, hashtags, video;
+  var id, _id, _req$body, title, description, hashtags, video;
 
   return regeneratorRuntime.async(function postEdit$(_context4) {
     while (1) {
       switch (_context4.prev = _context4.next) {
         case 0:
           id = req.params.id;
+          _id = req.session.user._id;
           _req$body = req.body, title = _req$body.title, description = _req$body.description, hashtags = _req$body.hashtags;
-          _context4.next = 4;
+          _context4.next = 5;
           return regeneratorRuntime.awrap(_Video["default"].exists({
             _id: id
           }));
 
-        case 4:
+        case 5:
           video = _context4.sent;
 
           if (video) {
-            _context4.next = 7;
+            _context4.next = 8;
             break;
           }
 
@@ -162,18 +169,26 @@ var postEdit = function postEdit(req, res) {
             pageTitle: "Video not found."
           }));
 
-        case 7:
-          _context4.next = 9;
+        case 8:
+          if (!(String(video.owner) !== String(_id))) {
+            _context4.next = 10;
+            break;
+          }
+
+          return _context4.abrupt("return", res.status(403).redirect("/"));
+
+        case 10:
+          _context4.next = 12;
           return regeneratorRuntime.awrap(_Video["default"].findByIdAndUpdate(id, {
             title: title,
             description: description,
             hashtags: _Video["default"].formatHashtags(hashtags)
           }));
 
-        case 9:
+        case 12:
           return _context4.abrupt("return", res.redirect("/videos/".concat(id)));
 
-        case 10:
+        case 13:
         case "end":
           return _context4.stop();
       }
@@ -198,7 +213,7 @@ var getUpload = function getUpload(req, res) {
 //   meta: {
 //     views : 0,
 //     rating : 0,
-//   },    
+//   },
 // });
 // await video.save(); // data가 db에 저장되는 시간을 기다림
 // title : title,
@@ -208,56 +223,94 @@ var getUpload = function getUpload(req, res) {
 exports.getUpload = getUpload;
 
 var postUpload = function postUpload(req, res) {
-  var _req$body2, title, description, hashtags;
+  var _id, fileUrl, _req$body2, title, description, hashtags, newVideo, user;
 
   return regeneratorRuntime.async(function postUpload$(_context5) {
     while (1) {
       switch (_context5.prev = _context5.next) {
         case 0:
+          _id = req.session.user._id;
+          fileUrl = req.file.path;
           _req$body2 = req.body, title = _req$body2.title, description = _req$body2.description, hashtags = _req$body2.hashtags;
-          _context5.prev = 1;
-          _context5.next = 4;
+          _context5.prev = 3;
+          _context5.next = 6;
           return regeneratorRuntime.awrap(_Video["default"].create({
             title: title,
             description: description,
+            fileUrl: fileUrl,
+            owner: _id,
             hashtags: _Video["default"].formatHashtags(hashtags)
           }));
 
-        case 4:
+        case 6:
+          newVideo = _context5.sent;
+          _context5.next = 9;
+          return regeneratorRuntime.awrap(_User["default"].findById(_id));
+
+        case 9:
+          user = _context5.sent;
+          user.videos.push(newVideo._id);
+          user.save();
           return _context5.abrupt("return", res.redirect("/"));
 
-        case 7:
-          _context5.prev = 7;
-          _context5.t0 = _context5["catch"](1);
+        case 15:
+          _context5.prev = 15;
+          _context5.t0 = _context5["catch"](3);
           return _context5.abrupt("return", res.status(400).render("upload", {
             pageTitle: "Upload Video",
             errorMessage: _context5.t0._message
           }));
 
-        case 10:
+        case 18:
         case "end":
           return _context5.stop();
       }
     }
-  }, null, null, [[1, 7]]);
+  }, null, null, [[3, 15]]);
 };
 
 exports.postUpload = postUpload;
 
 var deleteVideo = function deleteVideo(req, res) {
-  var id;
+  var id, _id, video;
+
   return regeneratorRuntime.async(function deleteVideo$(_context6) {
     while (1) {
       switch (_context6.prev = _context6.next) {
         case 0:
           id = req.params.id;
-          _context6.next = 3;
-          return regeneratorRuntime.awrap(_Video["default"].findByIdAndDelete(id));
-
-        case 3:
-          return _context6.abrupt("return", res.redirect("/"));
+          _id = req.session.user._id;
+          _context6.next = 4;
+          return regeneratorRuntime.awrap(_Video["default"].findById(id));
 
         case 4:
+          video = _context6.sent;
+
+          if (video) {
+            _context6.next = 7;
+            break;
+          }
+
+          return _context6.abrupt("return", res.status(400).render("404", {
+            pageTitle: "Video not found."
+          }));
+
+        case 7:
+          if (!(String(video.owner) !== String(_id))) {
+            _context6.next = 9;
+            break;
+          }
+
+          return _context6.abrupt("return", res.status(403).redirect("/"));
+
+        case 9:
+          _context6.next = 11;
+          return regeneratorRuntime.awrap(_Video["default"].findByIdAndDelete(id));
+
+        case 11:
+          return _context6.abrupt("return", res.redirect("/"));
+
+        case 12:
         case "end":
           return _context6.stop();
       }
@@ -284,7 +337,7 @@ var search = function search(req, res) {
           _context7.next = 5;
           return regeneratorRuntime.awrap(_Video["default"].find({
             title: {
-              $regex: new RegExp("".concat(keyword), "i") // 입력된 keyword 검색 "i"는 대소문자 무시 ${keyword} 
+              $regex: new RegExp("".concat(keyword), "i") // 입력된 keyword 검색 "i"는 대소문자 무시 ${keyword}
               //앞에 ^ 쓰면 keyword로 시작하는 제목 // 뒤에 $ 쓰면 keyword로 끝나는 제목
 
             }

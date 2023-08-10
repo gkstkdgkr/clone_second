@@ -11,11 +11,15 @@ var _morgan = _interopRequireDefault(require("morgan"));
 
 var _expressSession = _interopRequireDefault(require("express-session"));
 
+var _connectMongo = _interopRequireDefault(require("connect-mongo"));
+
 var _rootRouter = _interopRequireDefault(require("./routers/rootRouter"));
 
 var _userRouter = _interopRequireDefault(require("./routers/userRouter"));
 
 var _videoRouter = _interopRequireDefault(require("./routers/videoRouter"));
+
+var _middlewares = require("./middlewares");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
@@ -28,19 +32,16 @@ app.use(_express["default"].urlencoded({
   extended: true
 }));
 app.use((0, _expressSession["default"])({
-  secret: "Hello",
-  resave: true,
-  saveUninitialized: true
+  secret: process.env.COOKIE_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {},
+  store: _connectMongo["default"].create({
+    mongoUrl: process.env.DB_URL
+  })
 }));
-app.use(function (req, res, next) {
-  req.sessionStore.all(function (error, sessions) {
-    console.log(sessions);
-    next();
-  });
-});
-app.get("/add-one", function (req, res, next) {
-  return res.send("".concat(req.session.id));
-});
+app.use(_middlewares.localsMiddleware);
+app.use("/uploads", _express["default"]["static"]("uploads"));
 app.use("/", _rootRouter["default"]);
 app.use("/videos", _videoRouter["default"]);
 app.use("/users", _userRouter["default"]);
