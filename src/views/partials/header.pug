@@ -1,27 +1,29 @@
 header
-  a(href="/")
+  a(href="/").header__logo
     i.fab.fa-youtube
   //- 변수만 사용시
-  h1=pageTitle
   nav 
     ul 
+      li 
+        a(href="/search")
+          i.fas.fa-search
 
       if loggedIn
         li 
           a(href="/videos/upload") Upload Video
-        li 
-          a(href=`/users/${loggedInUser._id}`) My Profile
         li
           a(href="/users/edit") Edit Profile
         li 
           a(href="/users/logout") Log Out
-
-
+        li 
+          a(href=`/users/${loggedInUser._id}`) My Profile
+            if loggedInUser.avatarUrl===""
+              span 😁
+            else
+              img.header__avatar(src="/"+ loggedInUser.avatarUrl)
       //- not login
       else
         li
-          a(href="/join") Join
+          a(href="/login") Login
         li
-          a(href="/login") login
-      li
-        a(href="/search") Search
+          a(href="/join").header__btn Join

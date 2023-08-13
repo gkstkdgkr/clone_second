@@ -12,7 +12,7 @@ import User from "../models/User";
 // hello가 먼저 출력된 후 render과정을 거치고 video가 마지막에 출력됨(database검색이 끝나야 render가 실행됨) (Callback)
 // await를 쓰지않으면 코드 순서대로 출력이 되지 않음
 export const home = async (req, res) => {
-  const videos = await Video.find({}).sort({ createdAt: "desc" }); // db에서 불러옴
+  const videos = await Video.find({}).sort({ createdAt: "desc" }).populate("owner"); // db에서 불러옴
   return res.render("home", { pageTitle: `home`, videos });
 }; //pageTitle 템플릿 변수 전달
 // await를 씀으로써 db에게 데이터 받는 시간을 기다려줌
@@ -132,7 +132,7 @@ export const search = async (req, res) => {
         // 입력된 keyword 검색 "i"는 대소문자 무시 ${keyword}
         //앞에 ^ 쓰면 keyword로 시작하는 제목 // 뒤에 $ 쓰면 keyword로 끝나는 제목
       },
-    });
+    }).populate("owner"); 
   }
   return res.render("search", { pageTitle: "Search", videos });
 };
