@@ -1,13 +1,15 @@
-.profile__data{
+.profile__data {
   margin: 0, auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 30px;
-  img{
+
+  img {
     margin-bottom: 10px;
   }
-  h3{
+
+  h3 {
     font-size: 13px;
   }
 }

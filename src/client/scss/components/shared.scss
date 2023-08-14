@@ -2,6 +2,7 @@
   margin-bottom: 50px;
   font-size: 18px;
 }
+
 .video-grid {
   display: grid;
   gap: 50px;
@@ -11,12 +12,13 @@
 .auth-switch {
   text-align: center;
   margin-top: 40px;
-  a{
+
+  a {
     text-decoration: underline;
   }
 }
 
-.avatar{
+.avatar {
   width: 150px;
   height: 150px;
   border-radius: 75px;
