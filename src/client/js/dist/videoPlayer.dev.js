@@ -7,6 +7,8 @@ var volumeRange = document.getElementById("volume");
 var currentTime = document.getElementById("currentTime");
 var totalTime = document.getElementById("totalTime");
 var timeline = document.getElementById("timeline");
+var fullScreenBtn = document.getElementById("fullScreen");
+var videoContainer = document.getElementById("videoContainer");
 var volumeValue = 0.5;
 video.volume = volumeValue;
 
@@ -68,9 +70,22 @@ var handleTimeChange = function handleTimeChange(e) {
   video.currentTime = value;
 };
 
+var handleFullScreen = function handleFullScreen(e) {
+  var fullScreen = document.fullscreenElement;
+
+  if (fullScreen) {
+    document.exitFullscreen();
+    fullScreenBtn.innertext = "Enter Full Screen";
+  } else {
+    videoContainer.requestFullscreen();
+    fullScreenBtn.innertext = "Exit Full Screen";
+  }
+};
+
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMuteClick);
 volumeRange.addEventListener("input", handleVolumeChange);
 video.addEventListener("loadedmetadata", handleLoadedMetadata);
 video.addEventListener("timeupdate", handleTimeUpdate);
 timeline.addEventListener("input", handleTimeChange);
+fullScreenBtn.addEventListener("click", handleFullScreen);
