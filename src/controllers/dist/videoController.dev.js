@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.search = exports.deleteVideo = exports.postUpload = exports.getUpload = exports.postEdit = exports.getEdit = exports.watch = exports.home = void 0;
+exports.registerView = exports.search = exports.deleteVideo = exports.postUpload = exports.getUpload = exports.postEdit = exports.getEdit = exports.watch = exports.home = void 0;
 
 var _Video = _interopRequireDefault(require("../models/Video"));
 
@@ -31,7 +31,7 @@ var home = function home(req, res) {
           _context.next = 2;
           return regeneratorRuntime.awrap(_Video["default"].find({}).sort({
             createdAt: "desc"
-          }));
+          }).populate("owner"));
 
         case 2:
           videos = _context.sent;
@@ -341,7 +341,7 @@ var search = function search(req, res) {
               //앞에 ^ 쓰면 keyword로 시작하는 제목 // 뒤에 $ 쓰면 keyword로 끝나는 제목
 
             }
-          }));
+          }).populate("owner"));
 
         case 5:
           videos = _context7.sent;
@@ -361,3 +361,41 @@ var search = function search(req, res) {
 };
 
 exports.search = search;
+
+var registerView = function registerView(req, res) {
+  var id, video;
+  return regeneratorRuntime.async(function registerView$(_context8) {
+    while (1) {
+      switch (_context8.prev = _context8.next) {
+        case 0:
+          id = req.params.id;
+          _context8.next = 3;
+          return regeneratorRuntime.awrap(_Video["default"].findById(id));
+
+        case 3:
+          video = _context8.sent;
+
+          if (video) {
+            _context8.next = 6;
+            break;
+          }
+
+          return _context8.abrupt("return", res.sendStatus(404));
+
+        case 6:
+          video.meta.views = video.meta.views + 1;
+          _context8.next = 9;
+          return regeneratorRuntime.awrap(video.save());
+
+        case 9:
+          return _context8.abrupt("return", res.sendStatus(200));
+
+        case 10:
+        case "end":
+          return _context8.stop();
+      }
+    }
+  });
+};
+
+exports.registerView = registerView;

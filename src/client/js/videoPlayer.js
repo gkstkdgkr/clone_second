@@ -135,18 +135,18 @@ const keyController = (e) => {
     }
   }
   if (e.keyCode === 77) {
-    video.muted =!video.muted;
+    video.muted = !video.muted;
     muteBtnIcon.classList = video.muted
-     ? "fas fa-volume-mute"
-       : "fas fa-volume-up";
-    volumeRange.value = video.muted? 0 : volumeValue;
+      ? "fas fa-volume-mute"
+      : "fas fa-volume-up";
+    volumeRange.value = video.muted ? 0 : volumeValue;
   }
 }
 
 const handleEnded = () => {
-  const {id}=videoContainer.dataset;
-  fetch(`/api/video/${id}/view`,{
-    method:"POST",
+  const { id } = videoContainer.dataset;
+  fetch(`/api/videos/${id}/view`, {
+    method: "POST",
   })
 }
 

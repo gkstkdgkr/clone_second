@@ -19,6 +19,8 @@ var _userRouter = _interopRequireDefault(require("./routers/userRouter"));
 
 var _videoRouter = _interopRequireDefault(require("./routers/videoRouter"));
 
+var _apiRouter = _interopRequireDefault(require("./routers/apiRouter"));
+
 var _middlewares = require("./middlewares");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -42,9 +44,11 @@ app.use((0, _expressSession["default"])({
 }));
 app.use(_middlewares.localsMiddleware);
 app.use("/uploads", _express["default"]["static"]("uploads"));
+app.use("/static", _express["default"]["static"]("assets"));
 app.use("/", _rootRouter["default"]);
 app.use("/videos", _videoRouter["default"]);
 app.use("/users", _userRouter["default"]);
+app.use("/api", _apiRouter["default"]);
 var _default = app; //callback 은 js에서 기다리는것
 
 exports["default"] = _default;
