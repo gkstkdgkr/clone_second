@@ -13,6 +13,8 @@
   "author": "Hsh",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg/ffmpeg": "^0.12.5",
+    "@ffmpeg/util": "^0.12.0",
     "bcrypt": "^5.1.0",
     "connect-mongo": "^5.0.0",
     "dotenv": "^16.3.1",
