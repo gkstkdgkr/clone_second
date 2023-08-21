@@ -40,6 +40,7 @@ export const getEdit = async (req, res) => {
     return res.status(400).render("404", { pageTitle: "Video not found." });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
   return res.render("edit", { pageTitle: `Edit: ${video.title}`, video });
@@ -57,6 +58,7 @@ export const postEdit = async (req, res) => {
     return res.render("404", { pageTitle: "Video not found." });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
   await Video.findByIdAndUpdate(id, {
@@ -64,7 +66,7 @@ export const postEdit = async (req, res) => {
     description,
     hashtags: Video.formatHashtags(hashtags),
   });
-
+  req.flash("error", "Not authorized");
   return res.redirect(`/videos/${id}`);
 };
 
@@ -92,20 +94,21 @@ export const postUpload = async (req, res) => {
   const {
     user: { _id },
   } = req.session;
-  const { video,thumb } = req.files;
+  const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
   try {
     const newVideo = await Video.create({
       title,
       description,
       fileUrl: video[0].path,
-      thumbUrl: thumb[0].path,
+      thumbUrl: thumb[0].path.replace(/[\\]/g, "/"),
       owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
     const user = await User.findById(_id);
     user.videos.push(newVideo._id);
     user.save();
+    req.flash("error", "Not authorized");
     return res.redirect("/");
   } catch (error) {
     return res.status(400).render("upload", {
@@ -125,9 +128,11 @@ export const deleteVideo = async (req, res) => {
     return res.status(400).render("404", { pageTitle: "Video not found." });
   }
   if (String(video.owner) !== String(_id)) {
+    req.flash("error", "Not authorized");
     return res.status(403).redirect("/");
   }
   await Video.findByIdAndDelete(id);
+  req.flash("error", "Not authorized");
   return res.redirect("/");
 };
 

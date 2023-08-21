@@ -1,5 +1,4 @@
-import { FFmpeg } from '@ffmpeg/ffmpeg'
-import { fetchFile } from '@ffmpeg/util'
+import { createFFmpeg, fetchFile } from "@ffmpeg/ffmpeg";
 const actionBtn = document.getElementById("actionBtn");
 const video = document.getElementById("preview");
 
@@ -28,22 +27,22 @@ const handleDownload = async () => {
 
   actionBtn.disabled = true;
 
-  const ffmpeg = new FFmpeg()
-	await ffmpeg.load()
+  const ffmpeg = createFFmpeg({ log: true });
+  await ffmpeg.load();
 
   // ffmpeg 공간의 가상의 파일 생성
-	await ffmpeg.writeFile(files.input, await fetchFile(videoFile));
+  ffmpeg.FS("writeFile", files.input, await fetchFile(videoFile));
 
-  await ffmpeg.exec(["-i", files.input, "-r", "60", files.output]);
+  await ffmpeg.run("-i", files.input, "-r", "60", files.output);
   // input형식 files.input파일을 -r , 60 60프레임으로 인코딩 결과값 "files.output"
-  await ffmpeg.exec(
-    ["-i",
+  await ffmpeg.run(
+    "-i",
     files.input,
     "-ss",
     "00:00:01",
     "-frames:v",
     "1",
-     files.thumb]
+    files.thumb
   );
 
   const mp4File = ffmpeg.FS("readFile", files.output);
@@ -71,17 +70,11 @@ const handleDownload = async () => {
   actionBtn.addEventListener("click", handleStart);
 };
 
-const handleStop = () => {
-  actionBtn.innerText = "Download Recording";
-  actionBtn.removeEventListener("click", handleStop);
-  actionBtn.addEventListener("click", handleDownload);
-  recorder.stop();
-};
 
 const handleStart = () => {
-  actionBtn.innerText = "Stop Recording";
+  actionBtn.innerText = "Recoding"
+  actionBtn.disabled = true;
   actionBtn.removeEventListener("click", handleStart);
-  actionBtn.addEventListener("click", handleStop);
 
   recorder = new MediaRecorder(stream, { mimeType: "video/webm" });
   recorder.ondataavailable = (e) => {
@@ -90,14 +83,24 @@ const handleStart = () => {
     video.src = videoFile;
     video.loop = true;
     video.play();
+    actionBtn.innerText = "Download";
+    actionBtn.disabled = false;
+    actionBtn.
+    actionBtn.addEventListener("click", handleDownload);
   };
   recorder.start();
+  setTimeout(() => {
+    recorder.stop();
+  }, 5000);
 };
 
 const init = async () => {
   stream = await navigator.mediaDevices.getUserMedia({
     audio: false,
-    video: true,
+    video:{
+      width: 1024,
+      height: 576,
+    }
   });
   // video.srcObject = stream;
   video.play();

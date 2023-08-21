@@ -5,7 +5,7 @@
   "scripts": {
     "dev:server": "nodemon",
     "dev:assets": "webpack",
-    "build" : "webpack --stats-error-details"
+    "build": "webpack --stats-error-details"
   },
   "repository": {
     "type": "git",
@@ -14,12 +14,13 @@
   "author": "Hsh",
   "license": "ISC",
   "dependencies": {
-    "@ffmpeg/ffmpeg": "^0.12.5",
-    "@ffmpeg/util": "^0.12.0",
+    "@ffmpeg/core": "^0.8.5",
+    "@ffmpeg/ffmpeg": "^0.9.7",
     "bcrypt": "^5.1.0",
     "connect-mongo": "^5.0.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-flash": "0.0.2",
     "express-session": "^1.17.3",
     "mongoose": "^7.4.1",
     "morgan": "^1.10.0",
