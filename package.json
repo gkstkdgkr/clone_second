@@ -4,7 +4,8 @@
   "description": "The best way to watch videos.",
   "scripts": {
     "dev:server": "nodemon",
-    "dev:assets": "webpack"
+    "dev:assets": "webpack",
+    "build" : "webpack --stats-error-details"
   },
   "repository": {
     "type": "git",

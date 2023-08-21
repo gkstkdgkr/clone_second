@@ -3,14 +3,16 @@ extends base.pug
 block content
   div 
     video#preview
-    button#startBtn Start Recoding
+    button#actionBtn Start Recoding
   if errorMessage 
     span =errorMessage
   form(method="POST" enctype="multipart/form-data")
     label(for="video") Video File 
     input(type="file" accept="video/*", required, id="video" name="video")
+    label(for="thumb") Thumbnail File 
+    input(type="file" accept="image/*", required, id="thumb" name="thumb")
     input(name="title" placeholder="Title", required, type="text", maxlength: 80)
-    input(name="description" placeholder="Description (Enter at least 20 texts)", required, type="text", minlength: 20)
+    input(name="description" placeholder="Description (Enter at least 2 texts)", required, type="text", minlength: 2)
     input(name="hashtags" placeholder="Hashtags, separated by comma.", required, type="text")
     input(type="submit" value="Upload Video")
 
