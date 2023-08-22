@@ -143,7 +143,8 @@ export const finishGithubLogin = async (req, res) => {
   }
 };
 export const logout = (req, res) => {
-  req.session.destroy();
+  req.session.user = null;
+  req.session.loggedIn = false;
   req.flash("info", "Bye Bye");
   return res.redirect("/");
 };
@@ -162,7 +163,6 @@ export const postEdit = async (req, res) => {
     body: { name, email, username, location },
     file,
   } = req;
-  console.log(file);
   const updateUser = await User.findByIdAndUpdate(
     _id,
     {

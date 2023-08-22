@@ -12,11 +12,12 @@
 @import "./components/video-player.scss";
 // Screen
 
-@import "./screens/home.scss";
 @import "./screens/search.scss";
 @import "./screens/profile.scss";
 @import "./screens/edit-profile.scss";
 @import "./screens/upload.scss";
+@import "./screens/watch.scss";
+
 
 
 // Default
@@ -38,30 +39,41 @@ main {
   margin-top: 50px;
 }
 
-@keyframes goAway{
-  from{
+@keyframes goAway {
+  from {
     transform: none;
     opacity: 1;
   }
-  to{
+
+  to {
     transform: translateY(-50px);
     opacity: 0;
   }
 }
 
-.message{
+.message {
   position: absolute;
-  left:0;
-  top:0;
-  right:0;
-  margin:0 auto;
-  padding: 20px;
-  border-radius: 100000px;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  max-width: 200px;
+  padding: 10px 20px;
+  border-radius: 10000px;
   text-align: center;
   animation: goAway 0.5s ease-in-out forwards;
-  animation-delay: 5s;
-  &.error{
+  animation-delay: 1s;
+
+  &.error {
     background-color: tomato;
-    color:white;
+    color: white;
+  }
+  &.success {
+    background-color: skyblue;
+    color: white;
+  }
+  &.info {
+    background-color: greenyellow;
+    color: white;
   }
 }

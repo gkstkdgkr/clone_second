@@ -1,20 +1,24 @@
 // dirname =directory name
 // path.resolve => 경로 지정
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-
 const path = require("path");
+
+const BASE_JS = "./src/client/js/";
 
 module.exports = {
   entry: {
-    main: "./src/client/js/main.js",
-    videoPlayer: "./src/client/js/videoPlayer.js",
-    recoder:"./src/client/js/recoder.js",
+    main: BASE_JS + "main.js",
+    videoPlayer: BASE_JS + "videoPlayer.js",
+    recoder: BASE_JS + "recoder.js",
+    commentSection: BASE_JS + "commentSection.js",
   },
   mode: "development",
   watch: true,
-  plugins: [new MiniCssExtractPlugin({
-    filename: "css/styles.css"
-  })],
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: "css/styles.css",
+    }),
+  ],
   output: {
     filename: "js/[name].js",
     path: path.resolve(__dirname, "assets"),

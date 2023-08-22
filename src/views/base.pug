@@ -1,21 +1,21 @@
-inclued mixins/message
+include mixins/message.pug
 
 html(lang="ko")
   head
     meta(charset="UTF-8")
-  //- 다른 text도 섞어서 쓸 경우
-  title #{pageTitle} | #{siteName}
-  link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
-  link(rel="stylesheet" href="/static/css/styles.css")
+    //- 다른 text도 섞어서 쓸 경우
+    title #{pageTitle} | #{siteName}
+    link(rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css")
+    link(rel="stylesheet" href="/static/css/styles.css")
 
 
   body 
-    if messages.error 
-      +message("error",messages=error)
-    if messages.info 
-      +message("info",messages=info)
-    if messages.success 
-      +message("sucess",messages=success)
+    if messages.error
+      +message("error", messages.error)
+    if messages.info
+      +message("info", messages.info)
+    if messages.success
+      +message("sucess", messages.success)
     include partials/header
     main 
       block content

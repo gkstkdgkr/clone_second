@@ -16,6 +16,9 @@ let constrolsTimeout = null;
 let constrolsMovementTimeout = null;
 let volumeValue = 0.5;
 video.volume = volumeValue;
+video.play(); // video 페이지 들어가자 마자 재생
+playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause"; // 재생시 아이콘 변경
+
 
 const handlePlayClick = (e) => {
   if (video.paused) {
