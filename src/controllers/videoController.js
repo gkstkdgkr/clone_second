@@ -16,7 +16,8 @@ export const home = async (req, res) => {
     .sort({ createdAt: "desc" })
     .populate("owner"); // db에서 불러옴
   return res.render("home", { pageTitle: `home`, videos });
-}; //pageTitle 템플릿 변수 전달
+}; 
+//pageTitle 템플릿 변수 전달
 // await를 씀으로써 db에게 데이터 받는 시간을 기다려줌
 // async랑 세트로 씀(함수안에서만 사용)(promiss)
 // try catch는 try를 실행하고 오류시 catch실행
