@@ -114,20 +114,20 @@ const videoScreenClick = (e) => {
 }
 
 const keyController = (e) => {
-  if (e.keyCode === 32) {
+  if ((e.target!==textarea)&&e.keyCode === 32) {
     video.paused ? video.play() : video.pause();
     playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
   }
-  if (e.keyCode === 37) {
+  if ((e.target!==textarea)&&e.keyCode === 37) {
     video.currentTime -= 5;
-  } else if (e.keyCode === 39) {
+  } else if ((e.target!==textarea)&&e.keyCode === 39) {
     video.currentTime += 5;
-  } else if (e.keyCode === 38) {
+  } else if ((e.target!==textarea)&&e.keyCode === 38) {
     video.volume += 0.1;
-  } else if (e.keyCode === 40) {
+  } else if ((e.target!==textarea)&&e.keyCode === 40) {
     video.volume -= 0.1;
   }
-  if (e.keyCode === 70) {
+  if ((e.target!==textarea)&&e.keyCode === 70) {
     const fullScreen = document.fullscreenElement;
     if (fullScreen) {
       document.exitFullscreen();
@@ -137,7 +137,7 @@ const keyController = (e) => {
       fullScreenIcon.classList = "fas fa-compress";
     }
   }
-  if (e.keyCode === 77) {
+  if ((e.target!==textarea)&&e.keyCode === 77) {
     video.muted = !video.muted;
     muteBtnIcon.classList = video.muted
       ? "fas fa-volume-mute"
