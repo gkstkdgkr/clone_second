@@ -1,5 +1,7 @@
 import Video from "../models/Video";
+import Comment from "../models/Comment";
 import User from "../models/User";
+import { async } from "regenerator-runtime";
 // Video.find({})
 //   .then((videos)=>{
 //     console.log('videos',videos);
@@ -16,7 +18,7 @@ export const home = async (req, res) => {
     .sort({ createdAt: "desc" })
     .populate("owner"); // db에서 불러옴
   return res.render("home", { pageTitle: `home`, videos });
-}; 
+};
 //pageTitle 템플릿 변수 전달
 // await를 씀으로써 db에게 데이터 받는 시간을 기다려줌
 // async랑 세트로 씀(함수안에서만 사용)(promiss)
@@ -66,7 +68,7 @@ export const postEdit = async (req, res) => {
     description,
     hashtags: Video.formatHashtags(hashtags),
   });
-  req.flash("success","Changed successfully");
+  req.flash("success", "Changed successfully");
   return res.redirect(`/videos/${id}`);
 };
 
@@ -94,7 +96,7 @@ export const postUpload = async (req, res) => {
   const {
     user: { _id },
   } = req.session;
-  const { video,thumb } = req.files;
+  const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
   try {
     const newVideo = await Video.create({
@@ -157,4 +159,27 @@ export const registerView = async (req, res) => {
   video.meta.views = video.meta.views + 1;
   await video.save();
   return res.sendStatus(200);
+};
+
+export const createComment = async(req, res) => {
+  // const { id } = req.params;
+  // const { text } = req.body;
+  const {
+    session: { user },
+    body : {text},
+    params: { id },
+  } = req;
+  
+  const video = await Video.findById(id);
+
+  if (!video) {
+    return res.sendStatus(404);
+  }
+  const comment = await Comment.create({
+    text,
+    owner: user._id,
+    video: id,
+  })
+
+  return res.sendStatus(201);
 };
