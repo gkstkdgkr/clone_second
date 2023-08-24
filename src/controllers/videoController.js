@@ -161,15 +161,15 @@ export const registerView = async (req, res) => {
   return res.sendStatus(200);
 };
 
-export const createComment = async(req, res) => {
+export const createComment = async (req, res) => {
   // const { id } = req.params;
   // const { text } = req.body;
   const {
     session: { user },
-    body : {text},
+    body: { text },
     params: { id },
   } = req;
-  
+
   const video = await Video.findById(id);
 
   if (!video) {
@@ -179,8 +179,8 @@ export const createComment = async(req, res) => {
     text,
     owner: user._id,
     video: id,
-  })
+  });
   video.comments.push(comment._id);
   video.save();
-  return res.sendStatus(201);
+  return res.status(201).json({ newCommentId: comment._id }); // 실시간으로 달리는 댓글에 response(newCommentId)를 받게 함
 };
