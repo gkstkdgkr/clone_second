@@ -35,12 +35,16 @@ block content
       form.video__comment-form#commentForm
         textarea(cols="30" rows="10" placeholder="Write a comment on this video")
         button Add Comment
+  else
+    span#notification 로그인 시 댓글 사용이 가능합니다.
   div.video__comments
     ul
       each comment in video.comments.reverse()
         li.video__comment(data-id=comment.id)
           i.fas.fa-comment
           span    #{comment.text}
+          if String(comment.owner._id) === String(loggedInUser._id)
+            button.delete__comment ❌
 block scripts
   script(src="/static/js/videoPlayer.js") 
   if loggedIn
