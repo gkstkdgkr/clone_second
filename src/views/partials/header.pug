@@ -17,10 +17,10 @@ header
           a(href="/users/logout") Log Out
         li
           a(href=`/users/${loggedInUser._id}`)
-            if loggedInUser.avatarUrl === ""
+            if loggedInUser.avatarUrl === undefined
               span 😀
             else
-              if loggedInUser.avatarUrl.include("github")
+              if loggedInUser.socialOnly.toString().includes("github")
                 img.header__avatar(src=loggedInUser.avatarUrl)
               else
                 img.header__avatar(src="/" + loggedInUser.avatarUrl)
