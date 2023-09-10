@@ -19,7 +19,6 @@ video.volume = volumeValue;
 video.play(); // video 페이지 들어가자 마자 재생
 playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause"; // 재생시 아이콘 변경
 
-
 const handlePlayClick = (e) => {
   if (video.paused) {
     video.play();
@@ -51,6 +50,7 @@ const handleVolumeChange = (e) => {
   }
   volumeValue = value;
   video.volume = value;
+
 };
 
 const formatTime = (seconds) =>
@@ -61,7 +61,7 @@ const handleLoadedMetadata = () => {
   timeline.max = Math.floor(video.duration);
 };
 const handleTimeUpdate = () => {
-  currenTime.innerText = formatTime(Math.floor(video.currentTime));
+  currentTime.innerText = formatTime(Math.floor(video.currentTime));
   timeline.value = Math.floor(video.currentTime);
 };
 
@@ -111,11 +111,12 @@ const videoScreenClick = (e) => {
     video.pause();
   }
   playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
-}
+};
 
 const keyController = (e) => {
-  if (e.target!=="textarea") {
+  if (e.target !== "textarea") {
     if (e.keyCode === 32) {
+      e.preventDefault();
       video.paused ? video.play() : video.pause();
       playBtnIcon.classList = video.paused ? "fas fa-play" : "fas fa-pause";
     }
@@ -124,9 +125,13 @@ const keyController = (e) => {
     } else if (e.keyCode === 39) {
       video.currentTime += 5;
     } else if (e.keyCode === 38) {
+      e.preventDefault();
       video.volume += 0.1;
+      volumeRange.value = video.volume;
     } else if (e.keyCode === 40) {
+      e.preventDefault();
       video.volume -= 0.1;
+      volumeRange.value = video.volume;
     }
     if (e.keyCode === 70) {
       const fullScreen = document.fullscreenElement;
@@ -146,13 +151,13 @@ const keyController = (e) => {
       volumeRange.value = video.muted ? 0 : volumeValue;
     }
   }
-}
+};
 const handleEnded = () => {
   const { id } = videoContainer.dataset;
   fetch(`/api/videos/${id}/view`, {
     method: "POST",
-  })
-}
+  });
+};
 
 playBtn.addEventListener("click", handlePlayClick);
 muteBtn.addEventListener("click", handleMuteClick);
