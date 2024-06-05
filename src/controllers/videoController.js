@@ -61,12 +61,13 @@ export const postUpload = async (req, res) => {
   } = req.session;
   const { video, thumb } = req.files;
   const { title, description, hashtags } = req.body;
+  const isHeroku = process.env.NODE_ENV === "production";
   try {
     const newVideo = await Video.create({
       title,
       description,
-      fileUrl: video[0].location,
-      thumbUrl: thumb[0].location.replace(/\\/g, "/"),
+      fileUrl: isHeroku ? video[0].location : video[0].path,
+      thumbUrl: isHeroku ? thumb[0].location : video[0].path.replace(/\\/g, "/"),
       owner: _id,
       hashtags: Video.formatHashtags(hashtags),
     });
@@ -139,7 +140,7 @@ export const createComment = async (req, res) => {
   return res.status(201).json({ newCommentId: comment._id });
 };
 
-export const deleteComment = async(req,res) => {
+export const deleteComment = async (req, res) => {
   const {
     session: { user },
     params: { id },
@@ -148,7 +149,7 @@ export const deleteComment = async(req,res) => {
   if (!comment) {
     return res.sendStatus(404);
   }
-  if (String(comment.owner)!== String(user._id)) {
+  if (String(comment.owner) !== String(user._id)) {
     return res.sendStatus(403);
   }
   const videoId = comment.video;
@@ -157,4 +158,4 @@ export const deleteComment = async(req,res) => {
   await video.save();
   await Comment.findByIdAndDelete(id);
   return res.sendStatus(200);
-}
+};
