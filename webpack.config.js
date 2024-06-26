@@ -1,5 +1,3 @@
-// dirname =directory name
-// path.resolve => 경로 지정
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const path = require("path");
 
@@ -9,7 +7,7 @@ module.exports = {
   entry: {
     main: BASE_JS + "main.js",
     videoPlayer: BASE_JS + "videoPlayer.js",
-    recoder: BASE_JS + "recoder.js",
+    recorder: BASE_JS + "recorder.js",
     commentSection: BASE_JS + "commentSection.js",
   },
   plugins: [

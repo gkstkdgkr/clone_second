@@ -1,20 +1,19 @@
 import mongoose from "mongoose";
 
-export const formatHashtags = (hashtags) =>
-  hashtags.split(",").map((word) => (word.startsWith("#") ? word : `#${word}`));
-
 const videoSchema = new mongoose.Schema({
   title: { type: String, required: true, trim: true, maxLength: 80 },
-  fileUrl: { type: String, require: true },
-  thumbUrl: { type: String, require: true },
+  fileUrl: { type: String, required: true },
+  thumbUrl: { type: String, required: true },
   description: { type: String, required: true, trim: true, minLength: 2 },
   createdAt: { type: Date, required: true, default: Date.now },
   hashtags: [{ type: String, trim: true }],
-  meta: { views: { type: Number, default: 0, required: true } },
+  meta: {
+    views: { type: Number, default: 0, required: true },
+  },
   comments: [
-    { type: mongoose.Schema.Types.ObjectId, require: true, ref: "Comment" },
+    { type: mongoose.Schema.Types.ObjectId, required: true, ref: "Comment" },
   ],
-  owner: { type: mongoose.Schema.Types.ObjectId, require: true, ref: "User" },
+  owner: { type: mongoose.Schema.Types.ObjectId, required: true, ref: "User" },
 });
 
 videoSchema.static("formatHashtags", function (hashtags) {
@@ -22,7 +21,6 @@ videoSchema.static("formatHashtags", function (hashtags) {
     .split(",")
     .map((word) => (word.startsWith("#") ? word : `#${word}`));
 });
-
 
 const Video = mongoose.model("Video", videoSchema);
 

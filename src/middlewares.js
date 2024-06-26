@@ -13,28 +13,29 @@ const isHeroku = process.env.NODE_ENV === "production";
 
 const s3ImageUploader = multerS3({
   s3: s3,
-  bucket: "wetube-hsh/images",
+  bucket: "wetubeee/images",
   acl: "public-read",
 });
+
 const s3VideoUploader = multerS3({
   s3: s3,
-  bucket: "wetube-hsh/videos",
+  bucket: "wetubeee/videos",
   acl: "public-read",
 });
 
 export const localsMiddleware = (req, res, next) => {
   res.locals.loggedIn = Boolean(req.session.loggedIn);
-  res.locals.sitename = "Wetube";
-  res.locals.loggedInUser = req.session.user;
+  res.locals.siteName = "Wetube";
+  res.locals.loggedInUser = req.session.user || {};
   res.locals.isHeroku = isHeroku;
   next();
 };
 
 export const protectorMiddleware = (req, res, next) => {
   if (req.session.loggedIn) {
-    next();
+    return next();
   } else {
-    req.flash("error", "Log in first");
+    req.flash("error", "Log in first.");
     return res.redirect("/login");
   }
 };
@@ -51,14 +52,15 @@ export const publicOnlyMiddleware = (req, res, next) => {
 export const avatarUpload = multer({
   dest: "uploads/avatars/",
   limits: {
-    fileSize: 5000000,
+    fileSize: 3000000,
   },
   storage: isHeroku ? s3ImageUploader : undefined,
 });
+
 export const videoUpload = multer({
   dest: "uploads/videos/",
   limits: {
-    fileSize: 90000000,
+    fileSize: 10000000,
   },
   storage: isHeroku ? s3VideoUploader : undefined,
 });
